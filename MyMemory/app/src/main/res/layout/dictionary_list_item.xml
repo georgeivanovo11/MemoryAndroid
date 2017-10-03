@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="20px">
+
+    <TextView
+        android:id="@+id/engWord_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="eng"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/dash_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" - "
+        android:textColor="@android:color/black"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/rusWord_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="rus"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"/>
+
+</LinearLayout>
