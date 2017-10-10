@@ -58,7 +58,8 @@ public class DictionaryActivity extends AppCompatActivity
         mSearchButton = (Button) findViewById(R.id.search_button);
 
         mEngWordService = APIUtils.getEngWordService();
-        getEngWordList();
+
+        getAllEngWord();
 
         mWordListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,21 +75,31 @@ public class DictionaryActivity extends AppCompatActivity
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getEngWordList();
+//                if(mEditText.getText().toString() != " ")
+//                    Log.i("hi", "+" + mEditText.getText().toString() + "+");
+                findEngWordsBy(mEditText.getText().toString());
             }
         });
 
     }
 
-    public void getEngWordList()
+    public void getAllEngWord()
     {
-        Call<List<EngWord>> call = mEngWordService.getEngWords();
+        Call<List<EngWord>> call = mEngWordService.getAllEngWords();
         call.enqueue(new Callback<List<EngWord>>()
         {
             @Override
             public void onResponse(Call<List<EngWord>> call, Response<List<EngWord>> response)
             {
-                mWordList = response.body();
+                if(response.body() == null)
+                {
+                    mWordList.removeAll(mWordList);
+                }
+                else
+                {
+                    mWordList = response.body();
+                }
+
                 mWordListView.setAdapter(new DictionaryAdapter(
                         DictionaryActivity.this,
                         R.layout.dictionary_list_item,
@@ -104,6 +115,39 @@ public class DictionaryActivity extends AppCompatActivity
                         "Error with server!",
                         Toast.LENGTH_SHORT
                 ).show();
+                Log.e("Error",t.getMessage());
+            }
+        });
+    }
+
+    public void findEngWordsBy(String partOfWord)
+    {
+        Call<List<EngWord>> call = mEngWordService.findEngWordsBy(partOfWord);
+        call.enqueue(new Callback<List<EngWord>>()
+        {
+            @Override
+            public void onResponse(Call<List<EngWord>> call, Response<List<EngWord>> response)
+            {
+                if(response.body() == null)
+                {
+                    mWordList.removeAll(mWordList);
+                }
+                else
+                {
+                    mWordList = response.body();
+                }
+
+                mWordListView.setAdapter(new DictionaryAdapter(
+                        DictionaryActivity.this,
+                        R.layout.dictionary_list_item,
+                        mWordList)
+                );
+            }
+
+            @Override
+            public void onFailure(Call<List<EngWord>> call, Throwable t)
+            {
+                Toast.makeText(getApplicationContext(), "Error with server!", Toast.LENGTH_SHORT).show();
                 Log.e("Error",t.getMessage());
             }
         });

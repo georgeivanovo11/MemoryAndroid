@@ -10,9 +10,13 @@ import com.example.george.mymemory.Models.EngWord;
         import retrofit2.http.GET;
         import retrofit2.http.POST;
         import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 public interface EngWordService
 {
     @GET("/api/engwords")
-    Call<List<EngWord>> getEngWords();
+    Call<List<EngWord>> getAllEngWords();
+
+    @GET("/api/engwords/find")
+    Call<List<EngWord>> findEngWordsBy(@Query("partOfWord") String partOfWord);
 }
