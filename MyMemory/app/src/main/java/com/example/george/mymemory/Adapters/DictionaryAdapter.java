@@ -10,22 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
 
+import com.example.george.mymemory.Models.EngWord;
 import com.example.george.mymemory.Models.PartOfSpeech;
 import com.example.george.mymemory.Models.Segment;
 import com.example.george.mymemory.R;
 
 import static android.media.CamcorderProfile.get;
 
-public class DictionaryAdapter extends ArrayAdapter<PartOfSpeech>
+public class DictionaryAdapter extends ArrayAdapter<EngWord>
 {
     private LayoutInflater inflater;
     private int layout;
-    private List<PartOfSpeech> pos;
+    private List<EngWord> words;
 
-    public DictionaryAdapter(Context context, int resource, List<PartOfSpeech> pos) {
-        super(context, resource, pos);
+    public DictionaryAdapter(Context context, int resource, List<EngWord> words) {
+        super(context, resource, words);
 
-        this.pos = pos;
+        this.words = words;
         this.layout = resource;
         this.inflater = LayoutInflater.from(context);
     }
@@ -35,13 +36,12 @@ public class DictionaryAdapter extends ArrayAdapter<PartOfSpeech>
         View view=inflater.inflate(this.layout, parent, false);
 
         TextView engTextView = (TextView) view.findViewById(R.id.engWord_textview);
-        TextView rusTextView = (TextView) view.findViewById(R.id.rusWord_textview);
+        TextView posTextView = (TextView) view.findViewById(R.id.partofspeech_textview);
 
-        PartOfSpeech p = pos.get(position);
+        EngWord word = words.get(position);
 
-        
-        engTextView.setText(p.getTitle());
-        rusTextView.setText(Integer.toString( p.getId()));
+        engTextView.setText(word.getTitle());
+        posTextView.setText(word.getPos().getTitle());
 
         return view;
     }

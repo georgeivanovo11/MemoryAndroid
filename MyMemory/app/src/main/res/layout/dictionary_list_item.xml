@@ -21,10 +21,10 @@
         android:textSize="30sp"/>
 
     <TextView
-        android:id="@+id/rusWord_textview"
+        android:id="@+id/partofspeech_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="rus"
+        android:text="noun"
         android:textColor="@android:color/black"
         android:textSize="30sp"/>
 

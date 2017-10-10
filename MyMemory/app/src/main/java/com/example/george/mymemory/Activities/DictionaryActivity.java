@@ -22,6 +22,7 @@ import com.example.george.mymemory.Models.RusWord;
 import com.example.george.mymemory.Models.Segment;
 import com.example.george.mymemory.R;
 import com.example.george.mymemory.Retrofit.APIUtils;
+import com.example.george.mymemory.Services.EngWordService;
 import com.example.george.mymemory.Services.PosService;
 
 import java.util.ArrayList;
@@ -36,15 +37,15 @@ import static android.R.id.list;
 
 public class DictionaryActivity extends AppCompatActivity
 {
-    ListView mSegmentsListView;
+    ListView mWordListView;
     EditText mEditText;
-    Button mAddButton;
+    Button mSearchButton;
 
-    PosService mPosService;
+    EngWordService mEngWordService;
 
     DictionaryAdapter adapter;
 
-    List<PartOfSpeech> mList = new ArrayList<PartOfSpeech>();
+    List<EngWord> mWordList = new ArrayList<EngWord>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,52 +53,58 @@ public class DictionaryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        mSegmentsListView = (ListView) findViewById(R.id.segments_listview);
+        mWordListView = (ListView) findViewById(R.id.word_listview);
         mEditText = (EditText) findViewById(R.id.search_textedit);
-        mAddButton = (Button) findViewById(R.id.add_button);
+        mSearchButton = (Button) findViewById(R.id.search_button);
 
-        mPosService = APIUtils.getPosService();
+        mEngWordService = APIUtils.getEngWordService();
+        getEngWordList();
 
-
-        mSegmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mWordListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l)
             {
-                PartOfSpeech selected = (PartOfSpeech) parent.getItemAtPosition(position);
+                EngWord selected = (EngWord) parent.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(),
                                "You've chosen " +  selected.getTitle(),
                                Toast.LENGTH_SHORT).show();
             }
         });
 
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPosList();
-
-
+                getEngWordList();
             }
         });
 
     }
 
-    public void getPosList()
+    public void getEngWordList()
     {
-        Call<List<PartOfSpeech>> call = mPosService.getPos();
-        call.enqueue(new Callback<List<PartOfSpeech>>() {
+        Call<List<EngWord>> call = mEngWordService.getEngWords();
+        call.enqueue(new Callback<List<EngWord>>()
+        {
             @Override
-            public void onResponse(Call<List<PartOfSpeech>> call, Response<List<PartOfSpeech>> response) {
-                if(response.isSuccessful()){
-                    mList = response.body();
-                    Log.i("ok", mList.get(0).getTitle());
-                    mSegmentsListView.setAdapter(new DictionaryAdapter(DictionaryActivity.this,
-                            R.layout.dictionary_list_item, mList));
-                }
+            public void onResponse(Call<List<EngWord>> call, Response<List<EngWord>> response)
+            {
+                mWordList = response.body();
+                mWordListView.setAdapter(new DictionaryAdapter(
+                        DictionaryActivity.this,
+                        R.layout.dictionary_list_item,
+                        mWordList)
+                );
             }
 
             @Override
-            public void onFailure(Call<List<PartOfSpeech>> call, Throwable t) {
-                    Log.e("Error",t.getMessage());
+            public void onFailure(Call<List<EngWord>> call, Throwable t)
+            {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Error with server!",
+                        Toast.LENGTH_SHORT
+                ).show();
+                Log.e("Error",t.getMessage());
             }
         });
     }

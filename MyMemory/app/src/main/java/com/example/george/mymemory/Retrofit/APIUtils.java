@@ -1,5 +1,6 @@
 package com.example.george.mymemory.Retrofit;
 
+import com.example.george.mymemory.Services.EngWordService;
 import com.example.george.mymemory.Services.PosService;
 
 public class APIUtils
@@ -11,5 +12,10 @@ public class APIUtils
     public static PosService getPosService()
     {
         return RetrofitClient.getClient(API_URL).create(PosService.class);
+    }
+
+    public static EngWordService getEngWordService()
+    {
+        return RetrofitClient.getClient(API_URL).create(EngWordService.class);
     }
 }
